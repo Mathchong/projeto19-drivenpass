@@ -1,0 +1,67 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model users {
+  id          Int           @id @default(autoincrement())
+  email       String        @unique @db.VarChar(255)
+  password    String        @db.VarChar(255)
+  notes       notes[]
+  wifis       wifis[]
+  credentials credentials[]
+  cards       cards[]
+}
+
+model notes {
+  id        Int    @id @default(autoincrement())
+  title     String @db.VarChar(50)
+  text      String @db.VarChar(1000)
+  author    users  @relation(fields: [author_id], references: [id])
+  author_id Int
+
+  @@unique([author_id, title])
+}
+
+model wifis {
+  id        Int    @id @default(autoincrement())
+  title     String @db.VarChar(50)
+  name      String @db.VarChar(255)
+  password  String @db.VarChar(255)
+  author    users  @relation(fields: [author_id], references: [id])
+  author_id Int
+
+  @@unique([author_id, title])
+}
+
+model credentials {
+  id        Int    @id @default(autoincrement())
+  url       String @db.VarChar(255)
+  title     String @db.VarChar(50)
+  username  String @db.VarChar(255)
+  password  String @db.VarChar(255)
+  author    users  @relation(fields: [author_id], references: [id])
+  author_id Int
+
+  @@unique([author_id, title])
+}
+
+model cards {
+  id         Int      @id @default(autoincrement())
+  title      String   @db.VarChar(50)
+  number     String   @db.VarChar(16)
+  name       String   @db.VarChar(100)
+  cvv        String   @db.VarChar(4)
+  expiration DateTime @db.Timestamp()
+  pin        String   @db.VarChar(10)
+  virtual    Boolean  @db.Boolean
+  type       String   @db.VarChar(255)
+  author     users    @relation(fields: [author_id], references: [id])
+  author_id  Int
+
+  @@unique([author_id, title])
+}
