@@ -15,4 +15,4 @@ router.use('/user', userRouter)
 router.use('/wifis', wifisRouter)
 
 
-export default Router;
+export default router;
